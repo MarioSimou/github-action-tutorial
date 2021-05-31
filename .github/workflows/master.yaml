@@ -6,14 +6,13 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v2
-        with:
-            fetch-depth: 0
       - uses: actions/setup-go@v2
         with:
-          go-version: '^1.16.2' 
+          go-version: '^1.16.0' 
 
       - name: Tools Versions
         run: |
@@ -22,3 +21,21 @@ jobs:
 
       - name: Vet
         run: make vet
+
+      - name: Unit
+        id: unit
+        run: |
+          coverage=$(make unit | egrep -o '[0-9]+.[0-9]+%' | egrep -o '[0-9]+.[0-9]+')
+          echo "::set-output name=coverage::${coverage}"
+
+      - name: Coverage
+        env:
+          COVERAGE_BASELINE: 85.0
+          COVERAGE: ${{ steps.unit.outputs.coverage }}
+        run: |
+          if $(echo "${COVERAGE} ${COVERAGE_BASELINE}" | awk '{print ($1 < $2)}'); then
+            echo "Coverage: ${COVERAGE} < ${COVERAGE_BASELINE}"
+            exit 1
+          else
+            echo "Coverage: ${COVERAGE} > ${COVERAGE_BASELINE}"
+          fi

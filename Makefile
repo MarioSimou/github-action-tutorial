@@ -1,5 +1,5 @@
 unit:
-	go test ./internal/... -v
+	go test -cover ./internal/...
 fmt:
 	go fmt ./...
 vet:
