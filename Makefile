@@ -1,0 +1,6 @@
+unit:
+	go test ./internal/... -v
+fmt:
+	go fmt ./...
+vet:
+	go vet ./...

@@ -1,0 +1,19 @@
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Formatting
+        run: |
+          make fmt
+      - name: Vet
+        run: |
+          make vet
+      - name: Unit
+        run: |
+          make unit
