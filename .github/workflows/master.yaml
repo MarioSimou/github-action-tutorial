@@ -6,14 +6,19 @@ on:
 jobs:
   build:
     name: build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     steps:
-      - name: Formatting
+      - uses: actions/checkout@v2
+        with:
+            fetch-depth: 0
+      - uses: actions/setup-go@v2
+        with:
+          go-version: '^1.16.2' 
+
+      - name: Tools Versions
         run: |
-          make fmt
+          make --version
+          go version
+
       - name: Vet
-        run: |
-          make vet
-      - name: Unit
-        run: |
-          make unit
+        run: make vet

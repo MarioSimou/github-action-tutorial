@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/MarioSimou/calculator/internal"
+	"github.com/MarioSimou/github-action-tutorial/internal"
 )
 
 func main() {
