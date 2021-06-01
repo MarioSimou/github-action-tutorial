@@ -4,15 +4,16 @@ on:
   push:
     branches:
       - calculator-version
+  workflow_dispatch:
+    inputs:
+      initialValue:
+        description: 'The initial value'
+        required: true
+        default: 0
 jobs:
   addition:
     name: Addition
     runs-on: ubuntu-20.04
-    inputs:
-      initialValue:
-        description: 'the initial value'
-        required: true
-        default: 0
     steps:
       - name: One
         id: one
