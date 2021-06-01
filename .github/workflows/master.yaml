@@ -41,4 +41,5 @@ jobs:
     steps:
       - name: Multiplication
         run: |
-          echo "${{ needs.addition.outputs.one }}"
+          result=$(( ${{ needs.addition.outputs.one }} * ${{ needs.addition.outputs.one }} * ${{ needs.addition.outputs.one }}))
+          echo "Result: $result"
