@@ -4,15 +4,15 @@ on:
   push:
     branches:
       - calculator-version
-
 jobs:
   addition:
     name: Addition
     runs-on: ubuntu-20.04
-    outputs:
-      one: ${{ steps.one.outputs.one }}
-      two: ${{ steps.two.outputs.two }}
-      three: ${{ steps.three.outputs.three }}
+    inputs:
+      initialValue:
+        description: 'the initial value'
+        required: true
+        default: 0
     steps:
       - name: One
         id: one
@@ -31,15 +31,8 @@ jobs:
           echo "::set-output name=three::3"
 
       - name: Result
+        id: result
         run: |
-          result=$(( ${{ steps.one.outputs.one }} + ${{ steps.two.outputs.two }}  +  ${{ steps.three.outputs.three }} ))
+          echo "INITIAL: ${{ github.event.inputs.initialValue }}"
+          result=$(( $INPUT_INITIALVALUE + ${{ steps.one.outputs.one }} + ${{ steps.two.outputs.two }}  +  ${{ steps.three.outputs.three }} ))
           printf "Result: %s\n" $result
-  multiply:
-    name: Multiply
-    runs-on: ubuntu-20.04
-    needs: addition
-    steps:
-      - name: Multiplication
-        run: |
-          result=$(( ${{ needs.addition.outputs.one }} * ${{ needs.addition.outputs.two }} * ${{ needs.addition.outputs.three }}))
-          echo "Result: $result"
