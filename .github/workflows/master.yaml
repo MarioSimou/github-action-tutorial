@@ -1,9 +1,6 @@
 name: Calculator CI
 
 on:
-  push:
-    branches:
-      - calculator-version
   workflow_dispatch:
     inputs:
       initialValue:
@@ -35,5 +32,5 @@ jobs:
         id: result
         run: |
           echo "INITIAL: ${{ github.event.inputs.initialValue }}"
-          result=$(( $INPUT_INITIALVALUE + ${{ steps.one.outputs.one }} + ${{ steps.two.outputs.two }}  +  ${{ steps.three.outputs.three }} ))
+          result=$(( ${{ github.event.inputs.initialValue }} + ${{ steps.one.outputs.one }} + ${{ steps.two.outputs.two }}  +  ${{ steps.three.outputs.three }} ))
           printf "Result: %s\n" $result
