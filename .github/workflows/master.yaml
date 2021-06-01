@@ -1,41 +1,44 @@
+name: Calculator CI
+
 on:
   push:
     branches:
-      - master
+      - calculator-version
 
 jobs:
-  build:
-    name: build
+  addition:
+    name: Addition
     runs-on: ubuntu-20.04
-    timeout-minutes: 5
+    outputs:
+      one: ${{ steps.one.outputs.one }}
+      two: ${{ steps.two.outputs.two }}
+      three: ${{ steps.three.outputs.three }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: '^1.16.0' 
-
-      - name: Tools Versions
+      - name: One
+        id: one
         run: |
-          make --version
-          go version
+          echo "::set-output name=one::1"
 
-      - name: Vet
-        run: make vet
-
-      - name: Unit
-        id: unit
+      - name: Two
+        id: two
         run: |
-          coverage=$(make unit | egrep -o '[0-9]+.[0-9]+%' | egrep -o '[0-9]+.[0-9]+')
-          echo "::set-output name=coverage::${coverage}"
+          echo "::set-output name=two::2"
 
-      - name: Coverage
-        env:
-          COVERAGE_BASELINE: 85.0
-          COVERAGE: ${{ steps.unit.outputs.coverage }}
+
+      - name: Three
+        id: three
         run: |
-          if $(echo "${COVERAGE} ${COVERAGE_BASELINE}" | awk '{print ($1 < $2)}'); then
-            echo "Coverage: ${COVERAGE} < ${COVERAGE_BASELINE}"
-            exit 1
-          else
-            echo "Coverage: ${COVERAGE} > ${COVERAGE_BASELINE}"
-          fi
+          echo "::set-output name=three::3"
+
+      - name: Result
+        run: |
+          result=$(( ${{ steps.one.outputs.one }} + ${{ steps.two.outputs.two }}  +  ${{ steps.three.outputs.three }} ))
+          printf "Result: %s\n" $result
+  multiply:
+    name: Multiply
+    runs-on: ubuntu-20.04
+    needs: addition
+    steps:
+      - name: Multiplication
+        run: |
+          echo "${{ needs.addition.outputs.one }}"
